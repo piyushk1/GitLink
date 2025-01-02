@@ -1,20 +1,12 @@
-const express = require('express');
-const {
-  saveGithubUser,
-  findMutualConnections,
-  searchGithubUsers,
-  softDeleteUser,
-  updateUserInfo,
-  sortGithubUsers,
-} = require('../controllers/controller');
-
+const express = require("express");
 const router = express.Router();
+const { addUser, findFriends, searchUsers, softDeleteUser, updateUser, getUsersSorted } = require("../controllers/controller");
 
-router.post('/:username', saveGithubUser);
-router.post('/:username/friends', findMutualConnections);
-router.get('/search', searchGithubUsers);
-router.delete('/:username', softDeleteUser);
-router.patch('/:username', updateUserInfo);
-router.get('/sort', sortGithubUsers);
+router.post("/user/:username", addUser);
+router.get("/friends/:usernameA/:usernameB", findFriends);
+router.get("/search", searchUsers);
+router.delete("/user/:username", softDeleteUser);
+router.put("/user/:username", updateUser);
+router.get("/users", getUsersSorted);
 
 module.exports = router;
