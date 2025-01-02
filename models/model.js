@@ -1,6 +1,6 @@
-const db = require("../config/db");  // Import the pool
+const db = require("../config/db");  
 
-// Create table for users if not exists
+// Create table for users
 const createUsersTable = async () => {
   const query = `
     CREATE TABLE IF NOT EXISTS users (
@@ -17,7 +17,7 @@ const createUsersTable = async () => {
       deleted_at TIMESTAMP NULL
     );
   `;
-  await db.query(query);  // Use db.query from the pool
+  await db.query(query);  
 };
 
 // Add or Update user data
@@ -45,7 +45,7 @@ const saveUserData = async (userData) => {
     userData.followers,
     userData.following,
   ];
-  await db.query(query, values);  // Use db.query from the pool
+  await db.query(query, values);  
 };
 
 // Find users based on criteria
@@ -54,7 +54,7 @@ const findUserByCriteria = async (criteria) => {
     SELECT * FROM users WHERE github_username LIKE $1 OR location LIKE $2;
   `;
   const values = [`%${criteria}%`, `%${criteria}%`];
-  const result = await db.query(query, values);  // Use db.query from the pool
+  const result = await db.query(query, values);  
   return result.rows;
 };
 
@@ -83,19 +83,18 @@ const updateUserData = async (username, updateData) => {
     SET location = $1, bio = $2, blog = $3
     WHERE github_username = $4;
   `;
-  await db.query(query, [location, bio, blog, username]);  // Use db.query from the pool
+  await db.query(query, [location, bio, blog, username]);  
 };
 
 // Get all users sorted by specified field
 const getAllUsersSorted = async (sortBy) => {
 
-   // Validate and sanitize the sortBy value to prevent SQL injection
 const validColumns = ['public_repos','public_gists', 'followers','following', 'created_at']; 
 if (!validColumns.includes(sortBy)) {
-  sortBy = 'id'; // Default to 'id' if the sortBy value is invalid
+  sortBy = 'id'; 
 }
   const query = `SELECT * FROM users WHERE deleted_at IS NULL ORDER BY ${sortBy} DESC;`;
-  const result = await db.query(query);  // Use db.query from the pool
+  const result = await db.query(query);  
   return result.rows;};
 
 module.exports = {

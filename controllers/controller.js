@@ -4,7 +4,6 @@ const { saveUserData, findUserByCriteria, deleteUser, updateUserData, getAllUser
 const addUser = async (req, res) => {
   const { username } = req.params;
 
-  // Validate username parameter
   if (!username) {
     return res.status(400).json({ message: "Username parameter is missing" });
   }
@@ -71,7 +70,6 @@ const updateUser = async (req, res) => {
   const { username } = req.params;
   const updateData = req.body;
 
-  // Validate username parameter and update data
   if (!username) {
     return res.status(400).json({ message: "Username parameter is missing" });
   }

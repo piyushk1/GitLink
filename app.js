@@ -5,17 +5,17 @@ const helmet = require('helmet');
 
 const userRoutes = require("./routes/route");
 
-// Configure CORS to allow specific origins
+// Configure CORS 
 const corsOptions = {
-  origin: 'https://your-frontend-domain.com', // Replace with your frontend domain
-  methods: ['GET', 'POST'], // Allowed HTTP methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+  origin: '*',
+  methods: '*', 
+  allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
-// Apply helmet to set security headers
+//  helmet to set security headers
 app.use(helmet());
 
-// Apply CORS with the specified options
+//  CORS with the specified options
 app.use(cors(corsOptions));
 
 app.use(express.json());
@@ -24,7 +24,7 @@ app.use(express.json());
 const { createUsersTable } = require("./models/model");
 createUsersTable();
 
-// Use routes
+// routes
 app.use("/api", userRoutes);
 
 const PORT = process.env.PORT || 5000;

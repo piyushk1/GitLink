@@ -1,7 +1,6 @@
-const { Pool } = require('pg');  // Import Pool for connection pooling
+const { Pool } = require('pg');  
 const dotenv = require('dotenv');
 
-// Load environment variables
 dotenv.config();
 
 const pool = new Pool({
@@ -26,8 +25,6 @@ async function connectToDatabase() {
   }
 }
 
-// Don't manually call `end` here, connection pooling handles it.
 connectToDatabase();
 
-module.exports = pool;  // Export the pool instead of the client
-
+module.exports = pool;  
