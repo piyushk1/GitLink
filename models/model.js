@@ -76,7 +76,7 @@ const updateUserData = async (username, updateData) => {
 
 // Get all users sorted by specified field
 const getAllUsersSorted = async (sortBy) => {
-  const query = `SELECT * FROM users ORDER BY ${sortBy};`;
+  const query = `SELECT * FROM users ORDER BY ${sortBy} DESC;`;
   const result = await db.query(query);  // Use db.query from the pool
   return result.rows;
 };

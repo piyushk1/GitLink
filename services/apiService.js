@@ -1,12 +1,23 @@
 const axios = require("axios");
 
 const getGitHubUserData = async (username) => {
-  try {
-    const response = await axios.get(`https://api.github.com/users/${username}`);
-    return response.data;
-  } catch (error) {
-    throw new Error("Failed to fetch GitHub data");
+  const url = `https://api.github.com/users/${username}`;
+  const response = await axios.get(url);
+
+  if (!response.data) {
+    throw new Error("Failed to fetch GitHub user data");
   }
+
+  return {
+    github_username: response.data.login,
+    location: response.data.location || null,
+    bio: response.data.bio || null,
+    blog: response.data.blog || null,
+    public_repos: response.data.public_repos,
+    public_gists: response.data.public_gists,
+    followers: response.data.followers,
+    following: response.data.following,
+  };
 };
 
 const getMutualFollowers = async (userA, userB) => {
