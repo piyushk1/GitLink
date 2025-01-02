@@ -13,7 +13,8 @@ const createUsersTable = async () => {
       public_gists INTEGER,
       followers INTEGER,
       following INTEGER,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      deleted_at TIMESTAMP NULL
     );
   `;
   await db.query(query);  // Use db.query from the pool
@@ -57,10 +58,21 @@ const findUserByCriteria = async (criteria) => {
   return result.rows;
 };
 
-// Soft delete a user
+// Soft deletes a user
 const deleteUser = async (username) => {
-  const query = `UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE github_username = $1;`;
-  await db.query(query, [username]);  // Use db.query from the pool
+  try {
+    // Set the deleted_at timestamp for the user
+    const result = await db.query(
+      `UPDATE users SET deleted_at = NOW() WHERE github_username = $1 RETURNING *`,
+      [username]
+    );
+    if (result.rowCount === 0) {
+      throw new Error("User not found");
+    }
+    return result.rows[0];
+  } catch (error) {
+    throw new Error("Error soft deleting user: " + error.message);
+  }
 };
 
 // Update user data
@@ -76,10 +88,15 @@ const updateUserData = async (username, updateData) => {
 
 // Get all users sorted by specified field
 const getAllUsersSorted = async (sortBy) => {
-  const query = `SELECT * FROM users ORDER BY ${sortBy} DESC;`;
+
+   // Validate and sanitize the sortBy value to prevent SQL injection
+const validColumns = ['public_repos','public_gists', 'followers','following', 'created_at']; 
+if (!validColumns.includes(sortBy)) {
+  sortBy = 'id'; // Default to 'id' if the sortBy value is invalid
+}
+  const query = `SELECT * FROM users WHERE deleted_at IS NULL ORDER BY ${sortBy} DESC;`;
   const result = await db.query(query);  // Use db.query from the pool
-  return result.rows;
-};
+  return result.rows;};
 
 module.exports = {
   createUsersTable,

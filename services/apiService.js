@@ -28,6 +28,9 @@ const getMutualFollowers = async (userA, userB) => {
     ]);
     const userAFollowers = userAData.data.map((follower) => follower.login);
     const userBFollowers = userBData.data.map((follower) => follower.login);
+    console.log("1st user",userAFollowers)
+    console.log("2st user",userBFollowers)
+    
     return userAFollowers.filter((follower) => userBFollowers.includes(follower));
   } catch (error) {
     throw new Error("Failed to fetch mutual followers");
